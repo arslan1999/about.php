@@ -2,6 +2,9 @@
 
 mb_internal_encoding("utf-8");
 
+
+
+
 $regions = array( // Исходный массив
 
     "Орловская область" => array("Орел", "Болхов",  "Дмитровск"),
@@ -13,6 +16,7 @@ $regions = array( // Исходный массив
 $city_name = array(); // массив в который добавим названия с двумя словами
 
 foreach($regions as $region => $city_array) { // раскладываем ключи и их вложеные массивы по переменным
+    $region_name = $region;
 
     foreach ($city_array as $v) { // значения вложеных масивов заложим в переменную
 
@@ -28,27 +32,46 @@ foreach($regions as $region => $city_array) { // раскладываем клю
 
 }
 $str_funny_city_name = implode("-", $city_name);// Распилим массив с двойными названиями
-$array_funny_city_name = explode("-", $str_funny_city_name);// и соберем обратно только каждой части присвоим свой ключ
-?>
-<pre>
-    <?php var_dump($array_funny_city_name);// выводим на экран для проверки.. можно удалить эту строку она не важна ?>
-</pre>
-<ul>
-<?php
-if (is_array($array_funny_city_name) === true){ //выполняем поиск значений в массиве если истина то....
-    $region_key = array_keys($regions); // сохраняем ключи главного массива этим дадим им своего рода индетификатор =))
-    ?>
-    <li><?= $region_key[1].' '.$array_funny_city_name[2].' '.$array_funny_city_name[4]; ?></li><!-- Эту часть неуспел доработать -->
-    <li><?= $region_key[2].' '.$array_funny_city_name[6].' '.$array_funny_city_name[7]; ?></li> <!-- дел было много -->
-    <li><?= $region_key[2].' '.$array_funny_city_name[4].' '.$array_funny_city_name[0]; ?></li>
-    <li><?= $region_key[1].' '.$array_funny_city_name[0].' '.$array_funny_city_name[5]; ?></li>
-    <li><?= $region_key[2].' '.$array_funny_city_name[7].' '.$array_funny_city_name[2]; ?></li>
-    <li><?= $region_key[1].' '.$array_funny_city_name[2].' '.$array_funny_city_name[7]; ?></li>
-    <li><?= $region_key[2].' '.$array_funny_city_name[4].' '.$array_funny_city_name[3]; ?></li>
-    <li><?= $region_key[1].' '.$array_funny_city_name[0].' '.$array_funny_city_name[0]; ?></li>
-<?php }
-else{
-    echo 'Простите в массиве не нашлось забавных названий городов';
+$funny_city_name = explode("-", $str_funny_city_name);// и соберем обратно только каждой части присвоим свой ключ
+
+$funny_names_second = array();
+$funny_names_first = array();
+
+foreach ($funny_city_name as $k_name => $v_name){
+    if($k_name % 2 !=0){
+        array_push($funny_names_second, $v_name);
+    }
+    else{
+        array_push($funny_names_first, $v_name);
+    }
 }
+shuffle($funny_names_second);
+shuffle($funny_names_first);
 ?>
-</ul>
+<table>
+    <tr>
+        <td>
+<?php
+$region_key = array_keys($regions);
+foreach ($funny_names_first as $funny_name_first){
+    if($funny_name_first=='Сергиев' || $funny_name_first=='Павловский'){
+        echo $region_key[1];
+    }
+    elseif($funny_name_first=='Горячий'|| $funny_name_first=='Усть'){
+        echo $region_key[2];
+    }
+    echo ' '.$funny_name_first.'<br/>';
+    continue;
+}?>
+        </td>
+        <td>
+<?php
+foreach ($funny_names_second as $funny_name_second){
+    echo $funny_name_second.'<br/>';
+    continue;
+}?>
+        </td>
+    </tr>
+</table>
+
+
