@@ -11,10 +11,6 @@
         $data = array(); // массив в который заложим данные из файла csv
 
         if (($info_csv = fopen("table_info.csv", "r")) !== FALSE) { //Считываем информацию с csv и заодно выполняем проверку на наличие данных
-
-            ?>
-            <tr><td><?= $data[$i][0] ?></td><td><?= $data[$i][1] ?></td><td><?= $data[$i][2] ?></td></tr>
-                <?php
                 while (($get_csv = fgetcsv($info_csv, 500, ";")) !== FALSE) { //Пока данные в csv есть будем выполнять итерацию
                     array_push($data, $get_csv); // все полученные данные заложим в массив
                     ?>
