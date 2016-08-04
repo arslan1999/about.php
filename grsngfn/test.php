@@ -11,6 +11,11 @@
     <form action="" method="get" enctype="multipart/form-data">
         <div class="form-group has-success">
             <?php
+            if(empty($_SESSION['login'])){
+                http_response_code(403);
+                echo '<p>Доступ закрыт авторизируйтесь по ссылке</p></br><a href="index.php">Ссылка</a>';
+                exit;
+            }
             if(!empty($_GET['id_get'])) {
                 $get_id = $_GET['json'];
                 $file = __DIR__ . '/json/1.json';
