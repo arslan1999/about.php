@@ -21,7 +21,7 @@
             <input id="login" name="User[login]">
 
             <label for="password">Введите пароль</label>
-            <input id="password" name="User[password]">
+            <input id="password" type="password" name="User[password]">
 
             <input type="submit" value="Отправить">
         </div>
