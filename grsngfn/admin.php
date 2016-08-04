@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
  <head>
   <meta charset="utf-8">
   <title>Отправка файла на сервер</title>
@@ -9,12 +9,17 @@
  <div class="container text-center center-block">
      <?php
      session_start();
-     if($_SESSION['pass'] == false){
+     if(empty($_SESSION['pass'])){
          http_response_code(403);
          echo '<p>Доступ закрыт авторизируйтесь по ссылке</p></br><a href="index.php">Ссылка</a>';
          exit;
      }
-     
+     if (isset($_POST['destroy-session'])){
+         unset($_SESSION['login']);
+         unset($_SESSION['pass']);
+         session_destroy();
+         header('Location: index.php', true, 301);
+     }
      $dir = __DIR__.'/json/'; // путь до дериктории, для получения полного пути вызываем константу __DIR__
      $json = $dir . '1.json'; // путь до файла
      if(isset($_FILES['json'])){ // проверяем получен ли файл
@@ -37,8 +42,9 @@
       <form action="" method="post" enctype="multipart/form-data">
           <div class="form-group has-success">
               <label class="control-label" for="inputSuccess1">Загрузить json файл</label><br/>
-              <input type="file" name="json" class="center-block">
-              <input type="submit" value="Отправить">
+              <input id="inputSuccess1" type="file" name="json" class="center-block">
+              <input type="submit" value="Отправить"><br/><br/>
+              <input class="btn-success" type="submit" name="destroy-session" value="Разлогинироваться">
           </div>
       </form>
 
