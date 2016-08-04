@@ -10,6 +10,11 @@
  <div class="container text-center center-block">
      <table class="table table-hover">
      <?php
+     if(empty($_SESSION['login'])){
+         http_response_code(403);
+         echo '<p>Доступ закрыт авторизируйтесь по ссылке</p></br><a href="index.php">Ссылка</a>';
+         exit;
+     }
      $file = __DIR__.'/json/1.json';
      $get_data = file_get_contents($file);
      $json_array = json_decode($get_data, true);
