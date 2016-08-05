@@ -17,20 +17,19 @@
     <form action="action.php" method="POST">
         <div class="form-group has-success">
 
-            <label for="id">Введите id пользователя</label>
-            <input type="text" id="id" name="id">
+            <?php if(!empty($_SESSION['empty-value'])) {
+                echo $_SESSION['empty-value'];
+                unset($_SESSION['empty-value']);
+             }
 
+            else { ?>
+                <label for="id">Введите id пользователя</label>
+            <?php } ?>
+
+            <input type="text" id="id" name="id">
             <input type="submit" value="Отправить">
         </div>
     </form>
-    <?php
-    require_once "city.class.php";
-    require_once "profile.class.php";
-
-    $me = new Profile('353741051');
-
-    echo $me->name;
-    ?>
 </div>
 </body>
 </html>

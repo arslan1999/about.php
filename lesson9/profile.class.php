@@ -16,7 +16,7 @@ class Profile
 
     public function __construct($id)
     {
-        $this->id = getUserId::getId();
+        $this->id = $id;
 
         if ($this->profileExists())
         {
@@ -65,6 +65,7 @@ class Profile
         $this->name = $json->name;
         $this->surname = $json->surname;
         $this->city = $json->city;
+        
         $this->photo = $json->photo;
     }
 
@@ -93,6 +94,7 @@ class Profile
 
     private function downloadPhoto()
     {
+
         return file_put_contents(Profile::photoPath($this->id), fopen($this->photo, 'r'));
     }
 

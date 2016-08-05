@@ -14,10 +14,6 @@ echo $me->name;
 
 class getUserId
 {
-    public static function getId(){
-        session_start();
-        $id = $_SESSION['id'];
-        return $id;
-    }
+
     
 }
