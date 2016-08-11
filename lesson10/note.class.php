@@ -13,7 +13,7 @@ class Note implements feedable
 
     public static function storeFolder()
     {
-        return 'note';
+        return 'Note';
     }
 
     public static function contentIdPath($id)
@@ -46,29 +46,31 @@ class Note implements feedable
         $content = file_get_contents(static::contentIdPath($this->id));
         $this->content = $content;
     }
-    public function add_to_feed()
-    {
-        if($this->save()){
-            $feed_info = 'Note, '.$this->id;
-
-        }
-        else{
-            $feed_info = null;
-        }
-        return file_put_contents(__DIR__.'/feed.txt' , $feed_info);
-    }
     public function save()
     {
         if ($this->id === NULL)
         {
             $id = static::getFreeId();
             $this->id = $id;
-
         }
         return file_put_contents(static::contentIdPath($this->id),$this->content);
     }
+    public function add_to_feed()
+    {
+        $id = $this->id;
+        $addFeed = "feed.json";
+        $needle = [static::storeFolder(), $id];
+        
+        $json = file_get_contents($addFeed);
+        $json = json_decode($json, true);
+        if (array_search($needle, $json) === false ){
+            $json[] = [static::storeFolder(), $id];
+        }
+        $json = json_encode($json);
+        return file_put_contents($addFeed, $json);
+    }
     public function feed_item()
     {
-        return "<p>".$this->content."</p>";
+        return "<div class=\"panel-body\"><p>".$this->content."</p></div>";
     }
 }

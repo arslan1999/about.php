@@ -1,4 +1,5 @@
 <?php
+session_start();
 /**
  * Created by PhpStorm.
  * User: Dusty
@@ -9,23 +10,48 @@ error_reporting(E_ALL);
 require_once "feedable.interface.php";
 require_once "note.class.php";
 require_once "news.class.php";
+require_once "imageJpg.class.php";
 
-
-$data = [
-    ['Note', 1],
-    ['News', 1],
-    ['News', 2],
-    ['Note', 2]
-];
-
-foreach($data as $row)
-{
-    $class_name = $row[0];
-
-    $feed_object = new $class_name($row[1]);
-
-    /* @var $feed_object feedable */
-
-    echo $feed_object->feed_item();
-}
+$addFeed = "feed.json";
+$data = file_get_contents($addFeed);
+$data = json_decode($data, true);
 ?>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Лента</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container text-center" style="padding-top: 95px;border: 2px solid darkcyan">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <ul class="nav navbar-nav">
+            <?php if(!empty($_SESSION['login'])){ ?>
+                <li><a href="image_edit.php">Перейти к изображениям</a></li>
+                <li><a href="article_edit.php">Перейти к записям</a></li>
+                <li><a href="news_edit.php">Перейти к новостям</a></li>
+            <?php } ?>
+                <li><a href="feed.php">Список всех постов</a> </li>
+                <li><a href="index.php">Авторизация</a> </li>
+            </ul>
+        </div>
+    </nav>
+
+    <?php
+    foreach($data as $row)
+    {
+        $class_name = $row[0];
+        $feed_object = new $class_name($row[1]);
+        /* @var $feed_object feedable */
+        ?>
+        <div class="panel panel-primary">
+            <?= $feed_object->feed_item();?>
+        </div><br/><br/><br/>
+
+        <?php
+    }
+    ?>
+</div>
+</body>
+ </html>

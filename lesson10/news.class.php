@@ -12,7 +12,7 @@ class News extends Note implements feedable
 
     public static function storeFolder()
     {
-        return 'news';
+        return 'News';
     }
 
     public static function titleIdPath($id)
@@ -39,8 +39,16 @@ class News extends Note implements feedable
             return $result;
         }
     }
+
+    /**
+     * @return int
+     */
+    public function add_to_feed()
+    {
+        parent::add_to_feed();
+    }
     public function feed_item()
     {
-        return "<h2>".$this->title."</h2>".parent::feed_item();
+        return "<div class=\"panel-heading\"><h3 class=\"panel-title\">".$this->title."</h3></div>".parent::feed_item();
     }
 }

@@ -1,15 +1,9 @@
 <?php
-session_start();
-/**
- * Created by PhpStorm.
- * User: Dusty
- * Date: 29.07.2016
- * Time: 19:47
- */
-
+ session_start();
 error_reporting(E_ALL);
 require_once "feedable.interface.php";
 require_once "note.class.php";
+require_once "imageJpg.class.php";
 ?>
 <html>
 <head>
@@ -39,41 +33,58 @@ require_once "note.class.php";
         exit;
     }
     if (isset($_GET['id'])) {
-        $id = (int) $_GET['id'];
+    $id = (int) $_GET['id'];
     }
     elseif (!isset($_GET['id'])) {
         $id = null;
     }
-    $note = new Note($id);
+    $image = new Image($id);
 
-    if (isset($_POST['content']))
+    if(isset($_FILES['image'])){
+    if (preg_match('/\.(?:jpg)$/', $_FILES['image']['name']))
     {
-        $note->content = $_POST['content'];
-        $note->save();
-        if($id !== null) echo '<p> Запись успешно отредактирована </p>';
-        if($id === null) echo '<p>Запись успешно сохранена на сервере</p>'; $note->add_to_feed();
+        $image->image = move_uploaded_file($_FILES['image']['tmp_name'], $image->save());
+    if(isset($_POST['discription'])){
+        $image->discription = $_POST['discription'];
+        $image->saveDiscription();
     }
-    ?>
+        if($id !== null) echo '<p> Запись успешно отредактирована </p>';
+        if($id === null) echo '<p>Запись успешно сохранена на сервере</p>'; $image->add_to_feed();
+    }
+    else{
+        echo '<p>Только json формат</p>';
+    die;
+
+    }
+    }?>
     <form enctype="multipart/form-data" action="" method="post">
         <div class="form-group">
-            <label for="text">Описание картинки</label><br/>
-            <textarea class="form-control" rows="3" id="text" title="Текст" name="content"><?= $note->content ?></textarea><br/>
+            <label for="exampleInputFile">Загрузить картинку</label>
+            <input type="file" id="exampleInputFile"  name="image">
+            <p class="help-block">Только .jpg формат картинок</p>
+        </div>
+        <div class="form-group">
+            <label for="desc">Описание картинки</label><br/>
+            <textarea class="form-control" rows="3" id="desc" title="Текст" name="discription"><?= $image->discription ?></textarea><br/>
             <input class="btn btn-default" type="submit" value="Отправить">
         </div>
+
     </form>
+
     <table class="table table-hover">
         <thead>
-        <tr><td>Id</td><td>Текст</td><td>--------</td></tr>
+        <tr><td>Id</td><td>Картинка</td><td>Описание картинки</td><td>--------</td></tr>
         </thead>
         <tbody>
         <?php
         $id = 1;
-        while (file_exists($note->contentIdPath($id)))
+        while (file_exists($image->contentIdPath($id)))
         {?>
             <tr>
                 <td><?= $id ?></td>
-                <td><?= file_get_contents($note->contentIdPath($id))?></td>
-                <td><a class="btn btn-success" href="?id=<?= $id ?>">Редактировать</a> <a class="btn btn-danger" href="article_edit.php"> Перейди к загрузке нового контента</a></td>
+                <td><img width="150" src="<?= $image->contentIdPath($id)?>"></td>
+                <td><?= file_get_contents($image->titleIdPath($id)) ?></td>
+                <td><a class="btn btn-success" href="?id=<?= $id ?>">Редактировать</a> <a class="btn btn-danger" href="image_edit.php"> Перейди к загрузке нового контента</a></td>
             </tr>
             <?php
             $id++;
@@ -85,4 +96,3 @@ require_once "note.class.php";
 </div>
 </body>
 </html>
-
