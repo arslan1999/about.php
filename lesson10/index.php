@@ -29,7 +29,7 @@
     }
     
     ?>
-    <form action="action.php" method="POST">
+    <form action="article.php" method="POST">
         <?php if(empty($_SESSION['login'])){ ?>
         <div class="form-group has-success">
             <div class="form-group">

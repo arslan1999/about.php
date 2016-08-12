@@ -13,7 +13,7 @@ class Note implements feedable
 
     public static function storeFolder()
     {
-        return 'Note';
+        return 'note';
     }
 
     public static function contentIdPath($id)
