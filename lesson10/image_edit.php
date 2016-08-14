@@ -1,9 +1,12 @@
 <?php
  session_start();
 error_reporting(E_ALL);
-require_once "feedable.interface.php";
-require_once "note.class.php";
-require_once "imageJpg.class.php";
+require_once "autoload.php";
+
+spl_autoload_register("interfaceAutoload");
+spl_autoload_register("classAutoload");
+
+
 ?>
 <html>
 <head>
@@ -23,6 +26,9 @@ require_once "imageJpg.class.php";
                 <?php } ?>
                 <li><a href="feed.php">Список всех постов</a> </li>
                 <li><a href="index.php">Авторизация</a> </li>
+                <li><a href="news.php">Новости</a></li>
+                <li><a href="article.php">Записи</a></li>
+                <li><a href="image.php">Картинки</a></li>
             </ul>
         </div>
     </nav>
@@ -33,7 +39,7 @@ require_once "imageJpg.class.php";
         exit;
     }
     if (isset($_GET['id'])) {
-    $id = (int) $_GET['id'];
+        $id = (int) $_GET['id'];
     }
     elseif (!isset($_GET['id'])) {
         $id = null;
@@ -41,22 +47,23 @@ require_once "imageJpg.class.php";
     $image = new Image($id);
 
     if(isset($_FILES['image'])){
-    if (preg_match('/\.(?:jpg)$/', $_FILES['image']['name']))
-    {
-        $image->image = move_uploaded_file($_FILES['image']['tmp_name'], $image->save());
-    if(isset($_POST['discription'])){
-        $image->discription = $_POST['discription'];
-        $image->saveDiscription();
-    }
-        if($id !== null) echo '<p> Запись успешно отредактирована </p>';
-        if($id === null) echo '<p>Запись успешно сохранена на сервере</p>'; $image->add_to_feed();
-    }
-    else{
-        echo '<p>Только json формат</p>';
-    die;
+        if (preg_match('/\.(?:jpg)$/', $_FILES['image']['name']))
+        {
+            $image->image = move_uploaded_file($_FILES['image']['tmp_name'], $image->save());
+            if(isset($_POST['discription'])){
+                $image->discription = $_POST['discription'];
+                $image->saveDiscription();
+            }
+            if($id !== null) echo '<p> Запись успешно отредактирована </p>';
+            if($id === null) echo '<p>Запись успешно сохранена на сервере</p>'; $image->add_to_feed();
+        }
+        else{
+            echo '<p>Только json формат</p>';
+            die;
+        }
 
     }
-    }?>
+    ?>
     <form enctype="multipart/form-data" action="" method="post">
         <div class="form-group">
             <label for="exampleInputFile">Загрузить картинку</label>
@@ -64,13 +71,13 @@ require_once "imageJpg.class.php";
             <p class="help-block">Только .jpg формат картинок</p>
         </div>
         <div class="form-group">
+
             <label for="desc">Описание картинки</label><br/>
             <textarea class="form-control" rows="3" id="desc" title="Текст" name="discription"><?= $image->discription ?></textarea><br/>
             <input class="btn btn-default" type="submit" value="Отправить">
         </div>
 
     </form>
-
     <table class="table table-hover">
         <thead>
         <tr><td>Id</td><td>Картинка</td><td>Описание картинки</td><td>--------</td></tr>
@@ -79,11 +86,20 @@ require_once "imageJpg.class.php";
         <?php
         $id = 1;
         while (file_exists($image->contentIdPath($id)))
-        {?>
+        {
+            if(exif_imagetype($image->contentIdPath($id)) === IMAGETYPE_JPEG){
+                $image->format = 'Формат .jpg';
+            }
+            else{
+                $image->format = 'Не извесный формат';
+            }
+            $image->size = filesize($image->contentIdPath($id));
+            $image->date = date("F d Y H:i:s.", filemtime($image->contentIdPath($id)));
+            ?>
             <tr>
                 <td><?= $id ?></td>
                 <td><img width="150" src="<?= $image->contentIdPath($id)?>"></td>
-                <td><?= file_get_contents($image->titleIdPath($id)) ?></td>
+                <td><?= file_get_contents($image->titleIdPath($id)) ?> <p><?= $image->format; ?> <?= $image->size; ?> <?= $image->date; ?></p></td>
                 <td><a class="btn btn-success" href="?id=<?= $id ?>">Редактировать</a> <a class="btn btn-danger" href="image_edit.php"> Перейди к загрузке нового контента</a></td>
             </tr>
             <?php

@@ -18,6 +18,9 @@
                 <?php } ?>
                 <li><a href="feed.php">Список всех постов</a> </li>
                 <li><a href="index.php">Авторизация</a> </li>
+                <li><a href="news.php">Новости</a></li>
+                <li><a href="article.php">Записи</a></li>
+                <li><a href="image.php">Картинки</a></li>
             </ul>
         </div>
     </nav>
@@ -29,7 +32,7 @@
     }
     
     ?>
-    <form action="article.php" method="POST">
+    <form action="action.php" method="POST">
         <?php if(empty($_SESSION['login'])){ ?>
         <div class="form-group has-success">
             <div class="form-group">

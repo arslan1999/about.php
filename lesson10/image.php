@@ -5,6 +5,7 @@ require_once "autoload.php";
 spl_autoload_register("coreAutoload");
 
 
+
 if(isset($_GET['id'])){
     $id = $_GET['id'];
 }
@@ -17,7 +18,7 @@ if(isset($_GET['post'])){
 else{
     $post = NULL;
 }
-$note_core = new NoteCore();
+$image_core = new ImageCore();
 $i = 1;
 ?>
 <html>
@@ -31,11 +32,11 @@ $i = 1;
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
             <ul class="nav navbar-nav">
-            <?php if(!empty($_SESSION['login'])){ ?>
-                <li><a href="image_edit.php">Изменить изображения</a></li>
-                <li><a href="article_edit.php">Изменить записи</a></li>
-                <li><a href="news_edit.php">Изменить новости</a></li>
-            <?php } ?>
+                <?php if(!empty($_SESSION['login'])){ ?>
+                    <li><a href="image_edit.php">Изменить изображения</a></li>
+                    <li><a href="article_edit.php">Изменить записи</a></li>
+                    <li><a href="image_edit.php">Изменить новости</a></li>
+                <?php } ?>
                 <li><a href="feed.php">Список всех постов</a> </li>
                 <li><a href="index.php">Авторизация</a> </li>
                 <li><a href="news.php">Новости</a></li>
@@ -53,41 +54,47 @@ $i = 1;
                     <h3 class="panel-title">Это <?= $id ?> запись</h3>
                 </div>
                 <div class="panel-body">
-                    <p><?= $note_core->$post($id) ?></p>
+                    <p><?= $image_core->$post($id) ?></p>
                 </div>
             </div><br/><br/><br/>
             <?php
             echo '<p>Чтобы увидеть определенную запись выберете ее id</p>';
-            while (file_exists("Note/{$i}.txt")){
+            while (file_exists("image/discription{$i}.txt") && file_exists("image/{$i}.jpg")){
                 ?>
-                <a href="article.php?post=getOnePost&id=<?= $i ?>">Перейти к <?= $i ?> посту</a>
+                <a href="image.php?post=getOnePost&id=<?= $i ?>">Перейти к <?= $i ?> посту</a>
                 <?php
                 $i++;
             }
-        } elseif ($id === NULL && $post !== 'getOnePost') {
-            foreach ($note_core->$post() as $row) {
-                if ($row[0] === "Note") {
-                    if (file_exists("Note/{$row[1]}.txt")) {
-                        $content = file_get_contents("Note/{$row[1]}.txt");
+        }
+        elseif ($id === NULL && $post !== 'getOnePost') {
+            foreach ($image_core->$post() as $row) {
+                if ($row[0] === "image") {
+                    if (file_exists("image/discription{$row[1]}.txt") && file_exists("image/{$row[1]}.jpg")) {
+                        $content = "image/{$row[1]}.jpg";
+                        $title = file_get_contents("image/discription{$row[1]}.txt");
                         ?>
                         <div class="panel panel-primary">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Это <?= $row[1] ?> запись</h3>
+                                <h5 class="panel-title">Это <?= $row[1] ?> запись</h5>
+
                             </div>
                             <div class="panel-body">
-                                <p><?= $content ?></p>
+                                <h3 class="panel-title"><?= $title ?></h3>
+                                <img src="<?= $content ?>">
                             </div>
                         </div><br/><br/><br/>
                         <?php
                     }
                 }
             }
-        } else {
+        }
+        else {
             echo '<p>Чтобы увидеть определенную запись выберете ее id</p>';
-            while (file_exists("Note/{$i}.txt")){
-            ?>
-                <a href="article.php?post=getOnePost&id=<?= $i ?>">Перейти к <?= $i ?> посту</a>
-            <?php
+            $i = 1;
+            while (file_exists("image/discription{$i}.txt") && file_exists("image/{$i}.jpg")){
+                ?>
+                <a href="image.php?post=getOnePost&id=<?= $i ?>">Перейти к <?= $i ?> посту</a>
+                <?php
                 $i++;
             }
         }
@@ -95,9 +102,9 @@ $i = 1;
     else{
         ?>
         <p>Перейдите по одной из ссылок если вы хотите просмотреть контент</p>
-        <a href="article.php?post=getAllPost">Посмотреть все посты данного раздела</a>
-        <a href="article.php?post=getOnePost">Один пост данного раздела выбранный по id</a>
-    <?php
+        <a href="image.php?post=getAllPost">Посмотреть все посты данного раздела</a>
+        <a href="image.php?post=getOnePost">Один пост данного раздела выбранный по id</a>
+        <?php
     }?>
 </div>
 </body>

@@ -8,8 +8,11 @@ session_start();
  */
 
 error_reporting(E_ALL);
-require_once "feedable.interface.php";
-require_once "note.class.php";
+require_once "autoload.php";
+
+spl_autoload_register("interfaceAutoload");
+spl_autoload_register("classAutoload")
+
 ?>
 <html>
 <head>
@@ -29,6 +32,9 @@ require_once "note.class.php";
                 <?php } ?>
                 <li><a href="feed.php">Список всех постов</a> </li>
                 <li><a href="index.php">Авторизация</a> </li>
+                <li><a href="news.php">Новости</a></li>
+                <li><a href="article.php">Записи</a></li>
+                <li><a href="image.php">Картинки</a></li>
             </ul>
         </div>
     </nav>
