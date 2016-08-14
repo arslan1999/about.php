@@ -58,7 +58,7 @@ $i = 1;
             </div><br/><br/><br/>
             <?php
             echo '<p>Чтобы увидеть определенную запись выберете ее id</p>';
-            while (file_exists("news/title{$i}.txt") && file_exists("news/{$i}.txt")){
+            while (file_exists("News/title{$i}.txt") && file_exists("News/{$i}.txt")){
                 ?>
                 <a href="news.php?post=getOnePost&id=<?= $i ?>">Перейти к <?= $i ?> посту</a>
                 <?php
@@ -68,9 +68,9 @@ $i = 1;
         elseif ($id === NULL && $post !== 'getOnePost') {
             foreach ($news_core->$post() as $row) {
                 if ($row[0] === "News") {
-                    if (file_exists("news/title{$row[1]}.txt") && file_exists("news/{$row[1]}.txt")) {
-                        $content = file_get_contents("news/{$row[1]}.txt");
-                        $title = file_get_contents("news/title{$row[1]}.txt");
+                    if (file_exists("News/title{$row[1]}.txt") && file_exists("News/{$row[1]}.txt")) {
+                        $content = file_get_contents("News/{$row[1]}.txt");
+                        $title = file_get_contents("News/title{$row[1]}.txt");
                         ?>
                         <div class="panel panel-primary">
                             <div class="panel-heading">
@@ -89,7 +89,7 @@ $i = 1;
         }
         else {
             echo '<p>Чтобы увидеть определенную запись выберете ее id</p>';
-            while (file_exists("news/title{$i}.txt") && file_exists("news/{$i}.txt")){
+            while (file_exists("News/title{$i}.txt") && file_exists("News/{$i}.txt")){
                 ?>
                 <a href="news.php?post=getOnePost&id=<?= $i ?>">Перейти к <?= $i ?> посту</a>
                 <?php

@@ -58,7 +58,7 @@ $i = 1;
             </div><br/><br/><br/>
             <?php
             echo '<p>Чтобы увидеть определенную запись выберете ее id</p>';
-            while (file_exists("Note/{$i}.txt")){
+            while (file_exists("note/{$i}.txt")){
                 ?>
                 <a href="article.php?post=getOnePost&id=<?= $i ?>">Перейти к <?= $i ?> посту</a>
                 <?php
@@ -67,8 +67,8 @@ $i = 1;
         } elseif ($id === NULL && $post !== 'getOnePost') {
             foreach ($note_core->$post() as $row) {
                 if ($row[0] === "Note") {
-                    if (file_exists("Note/{$row[1]}.txt")) {
-                        $content = file_get_contents("Note/{$row[1]}.txt");
+                    if (file_exists("note/{$row[1]}.txt")) {
+                        $content = file_get_contents("note/{$row[1]}.txt");
                         ?>
                         <div class="panel panel-primary">
                             <div class="panel-heading">
@@ -84,7 +84,7 @@ $i = 1;
             }
         } else {
             echo '<p>Чтобы увидеть определенную запись выберете ее id</p>';
-            while (file_exists("Note/{$i}.txt")){
+            while (file_exists("note/{$i}.txt")){
             ?>
                 <a href="article.php?post=getOnePost&id=<?= $i ?>">Перейти к <?= $i ?> посту</a>
             <?php
